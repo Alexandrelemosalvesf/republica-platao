@@ -1,40 +1,8 @@
-const gameState = {
-    currentPhase: 0,
-
-    justice: 50,
-    wisdom: 50,
-    courage: 50,
-    temperance: 50,
-    resources: 50,
-    stability: 50,
-
-    choices: [],
-
-    cityStructure: {
-        producers: null,
-        guardians: null,
-        rulers: null
-    },
-
-    completedPhases: []
-};
-function resetGameState() {
-    gameState.currentPhase = 0;
-
-    gameState.justice = 50;
-    gameState.wisdom = 50;
-    gameState.courage = 50;
-    gameState.temperance = 50;
-    gameState.resources = 50;
-    gameState.stability = 50;
-
-    gameState.choices = [];
-
-    gameState.cityStructure = {
-        producers: null,
-        guardians: null,
-        rulers: null
-    };
-
-    gameState.completedPhases = [];
-}
+// Estado central da partida e funções de mutação controlada.
+const gameState={currentPhase:-1,attributes:{justice:50,wisdom:50,courage:50,temperance:50,resources:50,stability:50},choices:[],completedPhases:[],scoreHistory:[],cityStructure:{producers:null,guardians:null,rulers:null},pendingOutcome:null};
+const ATTRIBUTE_LABELS={justice:'Justiça',wisdom:'Sabedoria',courage:'Coragem',temperance:'Temperança',resources:'Recursos',stability:'Estabilidade'};
+function clampAttribute(value){return Math.max(0,Math.min(100,Math.round(value)))}
+function changeAttributes(effects={}){const changes={};for(const [key,delta] of Object.entries(effects)){if(!(key in gameState.attributes))continue;const old=gameState.attributes[key];gameState.attributes[key]=clampAttribute(old+delta);changes[key]=gameState.attributes[key]-old}return changes}
+function recordChoice(phase,decision,option,effects){const choice={phaseId:phase.id,phaseTitle:phase.title,decisionId:decision.id,optionId:option.id,optionLabel:option.label,effects:{...effects}};gameState.choices.push(choice);gameState.scoreHistory.push({choice,values:{...gameState.attributes}});return choice}
+function advancePhase(){const current=GAME_DATA.phases[gameState.currentPhase];if(current&&!gameState.completedPhases.includes(current.id))gameState.completedPhases.push(current.id);if(gameState.currentPhase<GAME_DATA.phases.length-1)gameState.currentPhase++;gameState.pendingOutcome=null;return GAME_DATA.phases[gameState.currentPhase]||null}
+function resetGameState(){gameState.currentPhase=-1;gameState.attributes={justice:50,wisdom:50,courage:50,temperance:50,resources:50,stability:50};gameState.choices=[];gameState.completedPhases=[];gameState.scoreHistory=[];gameState.cityStructure={producers:null,guardians:null,rulers:null};gameState.pendingOutcome=null}

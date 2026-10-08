@@ -1,0 +1,2 @@
+/* Ajustes dos componentes reutilizáveis da interface. */
+.choice[aria-pressed="true"]{border-color:var(--gold);box-shadow:inset 3px 0 var(--gold)}.choice:active,.btn:active{transform:translateY(1px)}.icon-btn:hover{color:var(--gold-light);border-color:var(--gold)}.consequence .eyebrow{font-size:10px}
